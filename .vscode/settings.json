@@ -1,7 +1,6 @@
 {
   "files.autoGuessEncoding": true,
   "files.encoding": "utf8",
-  "java.home":"G:\\jdk\\jdk-14",
   "java.jdt.ls.vmargs": "-Dfile.encoding=UTF-8",
   "javac-linter.javac": "javac -Dfile.encoding=UTF-8",
   "maven.view": "hierarchical",
@@ -13,5 +12,6 @@
   ],
   "java.configuration.maven.userSettings": "settings.xml",
   "maven.executable.path": "G:\\maven\\apache-maven-3.6.3\\bin\\mvn.cmd",
-  "java.configuration.updateBuildConfiguration": "automatic"
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.home":"G:\\jdk\\jdk-14"
 }
