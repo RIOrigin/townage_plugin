@@ -61,6 +61,7 @@ class CommandStage implements CommandExecutor {
                     }
                     stage.ranges.add(Dynamic.state.dynamicRanges.get(rangeName));
                 }
+                stage.SetProtect();
                 Dynamic.state.stages.put(stage.name,stage);
                 return true;
             }else if(subCmd.equals("ls")){

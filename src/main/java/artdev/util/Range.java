@@ -4,8 +4,8 @@ import static java.lang.Math.abs;
 
 public class Range {
     public String name;
-    private Vector v_min;
-    private Vector v_max;
+    public Vector v_min;
+    public Vector v_max;
     public Range(){
 
     }
@@ -13,8 +13,8 @@ public class Range {
         SetRange(v1,v2);
     }
     public void SetRange(Vector v1, Vector v2){
-        v_min = new Vector(Math.min(v1.x,v2.x),Math.min(v1.y,v2.y),Math.min(v1.z,v2.z));
-        v_max = new Vector(Math.max(v1.x,v2.x),Math.max(v1.y,v2.y),Math.max(v1.z,v2.z));
+        v_min = Vector.AllMin(v1,v2);
+        v_max = Vector.AllMax(v1,v2);
     }
     public double GetV(){
         Vector v = v_max.Sub(v_min);
@@ -24,7 +24,10 @@ public class Range {
         return String.format("%d %d %d %d %d %d",v_min.x,v_min.y,v_min.z,v_max.x,v_max.y,v_max.z);
     }
     public boolean IsIn(Vector v){
-        Vector u = v_max.Sub(v_min);
-        return v.x < u.x && v.y < u.y && v.z < u.z;
+        //Vector u = v_max.Sub(v_min);
+        //return v.x <= u.x && v.y <= u.y && v.z <= u.z;
+        return v.x >= v_min.x && v.x <= v_max.x
+                && v.y >= v_min.y && v.y <= v_max.y
+                && v.z >= v_min.z && v.z <= v_max.z;
     }
 }

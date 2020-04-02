@@ -14,32 +14,16 @@ import java.util.Map;
 public class TListener implements Listener {
     @EventHandler
     public void OnBlockBreak(BlockBreakEvent event){
-        Block block = event.getBlock();
-        Location loc = block.getLocation();
-        Vector v = new Vector(loc);
-        boolean canBreak = true;
-        for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
-            if(e.getValue().IsIn(v)){
-                canBreak = false;
-            }
-        }
-        if(!canBreak){
+        //Logger.Debug("Block break.");
+        if(Dynamic.CheckProtectBlock(event.getBlock())){
             event.getPlayer().sendMessage("这里受到魔法保护，不能破坏。");
             event.setCancelled(true);
         }
     }
     @EventHandler
     public void OnBlockPlace(BlockPlaceEvent event){
-        Block block = event.getBlock();
-        Location loc = block.getLocation();
-        Vector v = new Vector(loc);
-        boolean canPlace = true;
-        for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
-            if(e.getValue().IsIn(v)){
-                canPlace = false;
-            }
-        }
-        if(!canPlace){
+        //Logger.Debug("Block place.");
+        if(Dynamic.CheckProtectBlock(event.getBlock())){
             event.getPlayer().sendMessage("这里受到魔法保护，不能放置。");
             event.setCancelled(true);
         }
