@@ -13,8 +13,8 @@ public class Range {
         SetRange(v1,v2);
     }
     public void SetRange(Vector v1, Vector v2){
-        v_min = new Vector(Math.min(v1.x,v2.x),Math.min(v1.y,v2.y),Math.min(v1.y,v2.y));
-        v_max = new Vector(Math.max(v1.x,v2.x),Math.max(v1.y,v2.y),Math.max(v1.y,v2.y));
+        v_min = new Vector(Math.min(v1.x,v2.x),Math.min(v1.y,v2.y),Math.min(v1.z,v2.z));
+        v_max = new Vector(Math.max(v1.x,v2.x),Math.max(v1.y,v2.y),Math.max(v1.z,v2.z));
     }
     public double GetV(){
         Vector v = v_max.Sub(v_min);

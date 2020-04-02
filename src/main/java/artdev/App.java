@@ -55,17 +55,17 @@ class CommandStage implements CommandExecutor {
                 }
                 for(int i = 6; i < strings.length;i++){
                     String rangeName = strings[i];
-                    if(!Dynamic.dynamicRanges.containsKey(rangeName)){
+                    if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
                         commandSender.sendMessage(String.format("这个帧：%s 不存在啊。",rangeName));
                         return false;
                     }
-                    stage.ranges.add(Dynamic.dynamicRanges.get(rangeName));
+                    stage.ranges.add(Dynamic.state.dynamicRanges.get(rangeName));
                 }
-                Dynamic.stages.put(stage.name,stage);
+                Dynamic.state.stages.put(stage.name,stage);
                 return true;
             }else if(subCmd.equals("ls")){
                 ArrayList<String> result = new ArrayList<>();
-                for(Map.Entry<String, Dynamic.Stage> entry: Dynamic.stages.entrySet()){
+                for(Map.Entry<String, Dynamic.Stage> entry: Dynamic.state.stages.entrySet()){
                     Dynamic.Stage stage = entry.getValue();
                     String[] ranges = new String[stage.ranges.size()];
                     for(int i = 0;i<stage.ranges.size();i++){
@@ -81,16 +81,16 @@ class CommandStage implements CommandExecutor {
                     return false;
                 }
                 String stageName = strings[1];
-                if(!Dynamic.stages.containsKey(stageName)){
+                if(!Dynamic.state.stages.containsKey(stageName)){
                     commandSender.sendMessage("你要删的这个东西它不存在。");
                     return false;
                 }
-                Dynamic.stages.remove(stageName);
+                Dynamic.state.stages.remove(stageName);
                 return true;
             }
         }catch (Exception e){
             commandSender.sendMessage("仔细想想是不是哪里搞错了啊。");
-            App.instance.getServer().getConsoleSender().sendMessage(ExceptionUtil.getStackTrace(e));
+            Logger.Err(e);
             return false;
         }
         return false;
@@ -125,11 +125,11 @@ class CommandRange implements CommandExecutor {
                     commandSender.sendMessage("范围太大啦，不能超过1000");
                     return false;
                 }
-                Dynamic.dynamicRanges.put(rangeName,range);
+                Dynamic.state.dynamicRanges.put(rangeName,range);
                 return true;
             }else if(subCmd.equals("ls")){
                 ArrayList<String> result = new ArrayList<>();
-                for(Map.Entry<String,artdev.util.Range> entry: Dynamic.dynamicRanges.entrySet()){
+                for(Map.Entry<String,artdev.util.Range> entry: Dynamic.state.dynamicRanges.entrySet()){
                     artdev.util.Range range = entry.getValue();
                     result.add(String.format("Name:%s;(%s)",entry.getKey(),range));
                 }
@@ -141,17 +141,17 @@ class CommandRange implements CommandExecutor {
                     return false;
                 }
                 String rangeName = strings[1];
-                if(!Dynamic.dynamicRanges.containsKey(rangeName)){
+                if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
                     commandSender.sendMessage("你要删的这个东西它不存在。");
                     return false;
                 }
-                Dynamic.dynamicRanges.remove(rangeName);
+                Dynamic.state.dynamicRanges.remove(rangeName);
                 return true;
             }
 
         }catch (Exception e){
             commandSender.sendMessage("你再看看是哪里不对。");
-            App.instance.getServer().getConsoleSender().sendMessage(ExceptionUtil.getStackTrace(e));
+            Logger.Err(e);
             return false;
         }
         return false;

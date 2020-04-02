@@ -18,7 +18,7 @@ public class TListener implements Listener {
         Location loc = block.getLocation();
         Vector v = new Vector(loc);
         boolean canBreak = true;
-        for(Map.Entry<String, Range> e:Dynamic.dynamicRanges.entrySet()){
+        for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
             if(e.getValue().IsIn(v)){
                 canBreak = false;
             }
@@ -34,7 +34,7 @@ public class TListener implements Listener {
         Location loc = block.getLocation();
         Vector v = new Vector(loc);
         boolean canPlace = true;
-        for(Map.Entry<String, Range> e:Dynamic.dynamicRanges.entrySet()){
+        for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
             if(e.getValue().IsIn(v)){
                 canPlace = false;
             }
