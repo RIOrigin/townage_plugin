@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -41,11 +42,49 @@ class CommandStage implements CommandExecutor {
         if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
-            if(subCmd.equals("add")){ // stage add (stageName:string) (internal:int) (x:int) (y:int) (z:int) (rangeName,...:Range)
-                if(strings.length < 7){
+            if(subCmd.equals("build")){ // stage build (stageName:string) (internal:int) (rangeName,...:Range)
+                if(strings.length < 4){
                     commandSender.sendMessage("参数数量不对，看看是不是少了什么。");
                     return false;
                 }
+                if(!(commandSender instanceof Player)){
+                    commandSender.sendMessage("此指令只能由玩家发出。");
+                    return false;
+                }
+                Player player = (Player)commandSender;
+                TListener.BuildRangeAction action = TListener.playersAction.get(player);
+                if(action == null || action.state!= TListener.BuildRangeAction.STATE.POINT){
+                    commandSender.sendMessage("快用你的钻石斧头选择一个点，也可能是你一不小心选了个范围。");
+                    return false;
+                }
+                Dynamic.Stage stage = new Dynamic.Stage();
+                stage.name = strings[1];
+                stage.internal = Integer.parseInt(strings[2]);
+                stage.pos = action.firstLoc;
+                if(stage.internal <1){
+                    commandSender.sendMessage("间隔时间不能设置太短。");
+                    return false;
+                }
+                for(int i = 3; i < strings.length;i++){
+                    String rangeName = strings[i];
+                    if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
+                        commandSender.sendMessage(String.format("这个帧：%s 不存在啊。",rangeName));
+                        return false;
+                    }
+                    stage.rangeNames.add(rangeName);
+                }
+                stage.SetProtect();
+                if(Dynamic.state.stages.containsKey(stage.name)){
+                    commandSender.sendMessage(String.format("%s 已存在。",stage.name));
+                    return false;
+                }
+
+                Dynamic.state.stages.put(stage.name,stage);
+                commandSender.sendMessage(String.format("成功创建STAGE：%s",stage.name));
+                return true;
+            }
+            else if(subCmd.equals("add")){ // stage add (stageName:string) (internal:int) (x:int) (y:int) (z:int) (rangeName,...:Range)
+
                 Dynamic.Stage stage = new Dynamic.Stage();
                 stage.name = strings[1];
                 stage.internal = Integer.parseInt(strings[2]);
@@ -63,7 +102,13 @@ class CommandStage implements CommandExecutor {
                     stage.rangeNames.add(rangeName);
                 }
                 stage.SetProtect();
+                if(Dynamic.state.stages.containsKey(stage.name)){
+                    commandSender.sendMessage(String.format("%s 已存在。",stage.name));
+                    return false;
+                }
+
                 Dynamic.state.stages.put(stage.name,stage);
+                commandSender.sendMessage(String.format("成功创建STAGE：%s",stage.name));
                 return true;
             }else if(subCmd.equals("ls")){
                 ArrayList<String> result = new ArrayList<>();
@@ -86,6 +131,7 @@ class CommandStage implements CommandExecutor {
                     return false;
                 }
                 Dynamic.state.stages.remove(stageName);
+                commandSender.sendMessage(String.format("成功删除STAGE：%s",stageName));
                 return true;
             }
         }catch (Exception e){
@@ -104,6 +150,36 @@ class CommandRange implements CommandExecutor {
         if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
+            if(subCmd.equals("build")){ // trange build (rangeName:string)
+                if(strings.length<2){
+                    commandSender.sendMessage("参数数量不对啊！");
+                    return false;
+                }
+                String rangeName = strings[1];
+                if(!(commandSender instanceof Player)){
+                    commandSender.sendMessage("此指令只能由玩家发出。");
+                    return false;
+                }
+                Player player = (Player)commandSender;
+                TListener.BuildRangeAction action = TListener.playersAction.get(player);
+                if(action == null || action.state!= TListener.BuildRangeAction.STATE.RANGE){
+                    commandSender.sendMessage("快用你的钻石斧头选择一个范围。");
+                    return false;
+                }
+                Range range = action.range;
+
+                if(range.GetV()>1000 && !commandSender.isOp()){
+                    commandSender.sendMessage("范围太大啦，不能超过1000。");
+                    return false;
+                }
+                if(Dynamic.state.dynamicRanges.containsKey(rangeName)){
+                    commandSender.sendMessage(String.format("%s 已存在。",rangeName));
+                    return false;
+                }
+                Dynamic.state.dynamicRanges.put(rangeName,range);
+                commandSender.sendMessage(String.format("成功创建RANGE：%s",rangeName));
+                return true;
+            }
             if(subCmd.equals("add")){ // range add (rangeName:string) (x1:int) (y1:int) (z1:int) (x2:int) (y2:int) (z1:int)
                 if(strings.length<8){
                     commandSender.sendMessage("参数数量不对啊！");
@@ -126,7 +202,12 @@ class CommandRange implements CommandExecutor {
                     commandSender.sendMessage("范围太大啦，不能超过1000");
                     return false;
                 }
+                if(Dynamic.state.dynamicRanges.containsKey(rangeName)){
+                    commandSender.sendMessage(String.format("%s 已存在。",rangeName));
+                    return false;
+                }
                 Dynamic.state.dynamicRanges.put(rangeName,range);
+                commandSender.sendMessage(String.format("成功创建RANGE：%s",rangeName));
                 return true;
             }else if(subCmd.equals("ls")){
                 ArrayList<String> result = new ArrayList<>();
@@ -147,6 +228,7 @@ class CommandRange implements CommandExecutor {
                     return false;
                 }
                 Dynamic.state.dynamicRanges.remove(rangeName);
+                commandSender.sendMessage(String.format("成功删除RANGE：%s",rangeName));
                 return true;
             }
 
