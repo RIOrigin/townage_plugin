@@ -49,13 +49,13 @@ class CommandStage implements CommandExecutor {
                 }
                 if(!(commandSender instanceof Player)){
                     commandSender.sendMessage("此指令只能由玩家发出。");
-                    return false;
+                    return true;
                 }
                 Player player = (Player)commandSender;
                 TListener.BuildRangeAction action = TListener.playersAction.get(player);
                 if(action == null || action.state!= TListener.BuildRangeAction.STATE.POINT){
                     commandSender.sendMessage("快用你的钻石斧头选择一个点，也可能是你一不小心选了个范围。");
-                    return false;
+                    return true;
                 }
                 Dynamic.Stage stage = new Dynamic.Stage();
                 stage.name = strings[1];
@@ -63,20 +63,20 @@ class CommandStage implements CommandExecutor {
                 stage.pos = action.firstLoc;
                 if(stage.internal <1){
                     commandSender.sendMessage("间隔时间不能设置太短。");
-                    return false;
+                    return true;
                 }
                 for(int i = 3; i < strings.length;i++){
                     String rangeName = strings[i];
                     if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
                         commandSender.sendMessage(String.format("这个帧：%s 不存在啊。",rangeName));
-                        return false;
+                        return true;
                     }
                     stage.rangeNames.add(rangeName);
                 }
                 stage.SetProtect();
                 if(Dynamic.state.stages.containsKey(stage.name)){
                     commandSender.sendMessage(String.format("%s 已存在。",stage.name));
-                    return false;
+                    return true;
                 }
 
                 Dynamic.state.stages.put(stage.name,stage);
@@ -91,20 +91,20 @@ class CommandStage implements CommandExecutor {
                 stage.pos = new Vector(strings[3],strings[4],strings[5]);
                 if(stage.internal <1){
                     commandSender.sendMessage("间隔时间不能设置太短。");
-                    return false;
+                    return true;
                 }
                 for(int i = 6; i < strings.length;i++){
                     String rangeName = strings[i];
                     if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
                         commandSender.sendMessage(String.format("这个帧：%s 不存在啊。",rangeName));
-                        return false;
+                        return true;
                     }
                     stage.rangeNames.add(rangeName);
                 }
                 stage.SetProtect();
                 if(Dynamic.state.stages.containsKey(stage.name)){
                     commandSender.sendMessage(String.format("%s 已存在。",stage.name));
-                    return false;
+                    return true;
                 }
 
                 Dynamic.state.stages.put(stage.name,stage);
@@ -128,9 +128,11 @@ class CommandStage implements CommandExecutor {
                 String stageName = strings[1];
                 if(!Dynamic.state.stages.containsKey(stageName)){
                     commandSender.sendMessage("你要删的这个东西它不存在。");
-                    return false;
+                    return true;
                 }
+                Dynamic.state.stages.get(stageName).Remove();
                 Dynamic.state.stages.remove(stageName);
+
                 commandSender.sendMessage(String.format("成功删除STAGE：%s",stageName));
                 return true;
             }
@@ -158,23 +160,23 @@ class CommandRange implements CommandExecutor {
                 String rangeName = strings[1];
                 if(!(commandSender instanceof Player)){
                     commandSender.sendMessage("此指令只能由玩家发出。");
-                    return false;
+                    return true;
                 }
                 Player player = (Player)commandSender;
                 TListener.BuildRangeAction action = TListener.playersAction.get(player);
                 if(action == null || action.state!= TListener.BuildRangeAction.STATE.RANGE){
                     commandSender.sendMessage("快用你的钻石斧头选择一个范围。");
-                    return false;
+                    return true;
                 }
                 Range range = action.range;
 
                 if(range.GetV()>1000 && !commandSender.isOp()){
                     commandSender.sendMessage("范围太大啦，不能超过1000。");
-                    return false;
+                    return true;
                 }
                 if(Dynamic.state.dynamicRanges.containsKey(rangeName)){
                     commandSender.sendMessage(String.format("%s 已存在。",rangeName));
-                    return false;
+                    return true;
                 }
                 Dynamic.state.dynamicRanges.put(rangeName,range);
                 commandSender.sendMessage(String.format("成功创建RANGE：%s",rangeName));
@@ -200,11 +202,11 @@ class CommandRange implements CommandExecutor {
 
                 if(range.GetV()>1000){
                     commandSender.sendMessage("范围太大啦，不能超过1000");
-                    return false;
+                    return true;
                 }
                 if(Dynamic.state.dynamicRanges.containsKey(rangeName)){
                     commandSender.sendMessage(String.format("%s 已存在。",rangeName));
-                    return false;
+                    return true;
                 }
                 Dynamic.state.dynamicRanges.put(rangeName,range);
                 commandSender.sendMessage(String.format("成功创建RANGE：%s",rangeName));
@@ -225,7 +227,7 @@ class CommandRange implements CommandExecutor {
                 String rangeName = strings[1];
                 if(!Dynamic.state.dynamicRanges.containsKey(rangeName)){
                     commandSender.sendMessage("你要删的这个东西它不存在。");
-                    return false;
+                    return true;
                 }
                 Dynamic.state.dynamicRanges.remove(rangeName);
                 commandSender.sendMessage(String.format("成功删除RANGE：%s",rangeName));

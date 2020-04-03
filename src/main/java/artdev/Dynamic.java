@@ -68,6 +68,9 @@ public class Dynamic {
                     && v.y >= pos.y && v.y <= protectMax.y
                     && v.z >= pos.z && v.z <= protectMax.z;
         }
+        public void Remove(){
+            App.instance.getServer().dispatchCommand(App.instance.getServer().getConsoleSender(),String.format("fill %s %s minecraft:air",pos,protectMax));
+        }
     }
 
     public static void Enable(){
@@ -105,11 +108,11 @@ public class Dynamic {
         Location loc = block.getLocation();
         Vector v = new Vector(loc);
         boolean protect = false;
-        for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
+        /*for(Map.Entry<String, Range> e:Dynamic.state.dynamicRanges.entrySet()){
             if(e.getValue().IsIn(v)){
                 protect = true;
             }
-        }
+        }*/
         for(Map.Entry<String, Stage> e:Dynamic.state.stages.entrySet()){
             if(e.getValue().IsIn(v)){
                 protect = true;
