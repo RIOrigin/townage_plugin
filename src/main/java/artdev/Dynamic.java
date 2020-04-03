@@ -28,7 +28,7 @@ public class Dynamic {
         public String name;
         public Vector pos;
         public int internal = 1;
-        public ArrayList<Range> ranges = new ArrayList<>();
+        public ArrayList<String> rangeNames = new ArrayList<>();
         public int _counter = 0;
         public int _pointer = 0;
         public int version = 0;
@@ -39,8 +39,8 @@ public class Dynamic {
             return _counter == 0;
         }
         public Range Get(){
-            Range result = ranges.get(_pointer);
-            _pointer = (_pointer + 1) % ranges.size();
+            Range result = Dynamic.state.dynamicRanges.get(rangeNames.get(_pointer));
+            _pointer = (_pointer + 1) % rangeNames.size();
             return result;
         }
         public void Tick(){
@@ -54,7 +54,8 @@ public class Dynamic {
         public Vector protectMax;
         public void SetProtect(){
             protectMax = new Vector(Integer.MIN_VALUE,Integer.MIN_VALUE,Integer.MIN_VALUE);
-            for(Range range:ranges){
+            for(String rangeName:rangeNames){
+                Range range = Dynamic.state.dynamicRanges.get(rangeName);
                 Vector v = Vector.Sub(range.v_max,range.v_min);
                 protectMax = Vector.AllMax(v,protectMax);
             }

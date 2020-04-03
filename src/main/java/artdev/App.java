@@ -21,8 +21,8 @@ public class App extends JavaPlugin
     @Override
     public void onEnable(){
         instance = this;
-        this.getCommand("range").setExecutor(new CommandRange());
-        this.getCommand("stage").setExecutor(new CommandStage());
+        this.getCommand("Trange").setExecutor(new CommandRange());
+        this.getCommand("Tstage").setExecutor(new CommandStage());
         getServer().getPluginManager().registerEvents(new TListener(), this);
         Dynamic.Enable();
         getLogger().info("Townage enable.");
@@ -38,6 +38,7 @@ class CommandStage implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
             if(subCmd.equals("add")){ // stage add (stageName:string) (internal:int) (x:int) (y:int) (z:int) (rangeName,...:Range)
@@ -59,7 +60,7 @@ class CommandStage implements CommandExecutor {
                         commandSender.sendMessage(String.format("这个帧：%s 不存在啊。",rangeName));
                         return false;
                     }
-                    stage.ranges.add(Dynamic.state.dynamicRanges.get(rangeName));
+                    stage.rangeNames.add(rangeName);
                 }
                 stage.SetProtect();
                 Dynamic.state.stages.put(stage.name,stage);
@@ -68,10 +69,8 @@ class CommandStage implements CommandExecutor {
                 ArrayList<String> result = new ArrayList<>();
                 for(Map.Entry<String, Dynamic.Stage> entry: Dynamic.state.stages.entrySet()){
                     Dynamic.Stage stage = entry.getValue();
-                    String[] ranges = new String[stage.ranges.size()];
-                    for(int i = 0;i<stage.ranges.size();i++){
-                        ranges[i] = stage.ranges.get(i).name;
-                    }
+                    String[] ranges = new String[stage.rangeNames.size()];
+                    stage.rangeNames.toArray(ranges);
                     result.add(String.format("Name:%s;Internal:%d;Pos:(%s),Stages:%s",stage.name,stage.internal, stage.pos,StringUtils.join(ranges,",")));
                 }
                 commandSender.sendMessage(result.toArray(new String[0]));
@@ -102,6 +101,7 @@ class CommandRange implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
+        if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
             if(subCmd.equals("add")){ // range add (rangeName:string) (x1:int) (y1:int) (z1:int) (x2:int) (y2:int) (z1:int)

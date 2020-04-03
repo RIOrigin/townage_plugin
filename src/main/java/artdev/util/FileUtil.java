@@ -16,6 +16,7 @@ public class FileUtil {
             Reader in = new FileReader(file);
             StringWriter out = new StringWriter();
             copy(in,out);
+            in.close();
             return out.toString();
         }
         return "";

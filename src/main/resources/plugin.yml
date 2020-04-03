@@ -2,9 +2,9 @@ main: artdev.App
 name: TownagePlugin
 version: 1.0.0
 commands:
-  range:
+  Trange:
     description: 设置一个范围，不懂问AaronRobert
-    usage: /range [add/ls/rm] (rangeName:string) (x1:int) (y1:int) (z1:int) (x2:int) (y2:int) (z1:int)
-  stage:
+    usage: /Trange [add/ls/rm] (rangeName:string) (x1:int) (y1:int) (z1:int) (x2:int) (y2:int) (z1:int)
+  Tstage:
     description: 设置一个STAGE，不懂问AaronRobert
-    usage: /stage [add/ls/rm] (stageName:string) (internal:int) (x:int) (y:int) (z:int) (rangeName,...:Range)
+    usage: /Tstage [add/ls/rm] (stageName:string) (internal:int) (x:int) (y:int) (z:int) (rangeName,...:Range)
