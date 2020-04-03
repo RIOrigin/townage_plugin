@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.bukkit.Location;
 import org.bukkit.Server;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permission;
@@ -145,10 +146,24 @@ class DynamicTask extends BukkitRunnable{
                 Range range = stage.Get();
                 Logger.Log(String.format("clone %s %s masked",range,stage.pos));
                 // use  /gamerule sendCommandFeedback false
-                App.instance.getServer().dispatchCommand(App.instance.getServer().getConsoleSender(),String.format("clone %s %s replace",range,stage.pos));
+                CloneBlocks(range,stage.pos);
+                // App.instance.getServer().dispatchCommand(App.instance.getServer().getConsoleSender(),String.format("clone %s %s replace",range,stage.pos));
             }
             stage.Tick();
         }
         //App.instance.getServer().dispatchCommand(String.format("clone %d %d %d "))
+    }
+    static void CloneBlocks(Range range,Vector pos){
+        World world = App.instance.getServer().getWorld("world");
+        Vector v = Vector.Sub(range.v_max,range.v_min);
+        for(int x = 0;x<=v.x;x++){
+            for(int y = 0;y<=v.y;y++){
+                for(int z = 0;z<=v.z;z++){
+                    Block rangeBlock = world.getBlockAt(x+range.v_min.x,y+range.v_min.y,z+range.v_min.z);
+                    Block stageBlock = world.getBlockAt(x+pos.x,y+pos.y,z+pos.z);
+                    stageBlock.setBlockData(rangeBlock.getBlockData(),true);
+                }
+            }
+        }
     }
 }
