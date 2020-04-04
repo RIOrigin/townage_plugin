@@ -78,7 +78,7 @@ public class Dynamic {
         dynamicTask = new DynamicTask();
         dynamicTask.runTaskTimer(App.instance,20L,20L);
         persistTask = new PersistTask();
-        persistTask.runTaskTimer(App.instance, 20L, 200L);
+        persistTask.runTaskTimer(App.instance, 20L, 1200L);
     }
     public static void ReadData(){
         File file = new File("./dynamic.data");

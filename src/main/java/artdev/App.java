@@ -39,7 +39,7 @@ class CommandStage implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!Permission.CheckOp(commandSender))return true;
+        //if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
             if(subCmd.equals("build")){ // stage build (stageName:string) (internal:int) (rangeName,...:Range)
@@ -149,7 +149,7 @@ class CommandRange implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if(!Permission.CheckOp(commandSender))return true;
+        //if(!Permission.CheckOp(commandSender))return true;
         try{
             String subCmd = strings[0];
             if(subCmd.equals("build")){ // trange build (rangeName:string)
